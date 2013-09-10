@@ -1,5 +1,6 @@
 package com.codepath.apps.mytwitterapp.models;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet extends BaseModel {
+public class Tweet extends BaseModel implements Serializable{
     private User user;
 
     public User getUser() {

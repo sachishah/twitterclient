@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codepath.apps.mytwitterapp.models.Tweet;
 import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -81,8 +82,11 @@ public class ComposeActivity extends Activity {
 	    MyTwitterApp.getRestClient().postStatusesUpdate(new JsonHttpResponseHandler() {
 	    	@Override
 			public void onSuccess(JSONObject object) {
-	    		Intent intent = new Intent(getBaseContext(), TimelineActivity.class);
-				startActivity(intent);
+	    		Tweet tweet = Tweet.fromJson(object);
+	    		Intent i = new Intent(getBaseContext(), TimelineActivity.class);
+	    		i.putExtra("tweet", tweet);
+				startActivity(i);
+				finish();
 	    	}
 		}, tweet);
 	}

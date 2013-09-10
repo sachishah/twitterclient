@@ -46,6 +46,11 @@ public class TimelineActivity extends Activity {
 				}
 				
 				ArrayList<Tweet> newTweets = Tweet.fromJson(jsonTweets);
+
+				Tweet tweet = (Tweet) getIntent().getSerializableExtra("tweet");
+				if (tweet != null)
+					tweets.add(tweet);
+
 				while (index < newTweets.size()) {
 					tweets.add(newTweets.get(index));
 					index++;
