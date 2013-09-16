@@ -39,34 +39,42 @@ public class Tweet extends BaseModel implements Serializable{
     	SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM d h:m:s ZZZ yyyy", Locale.getDefault());
     	
     	try {
-	    	Date date = (Date) formatter.parse(getString("created_at"));        
+	    	Date date = (Date) formatter.parse(getString("created_at"));     
 	    	Calendar cal = Calendar.getInstance();
 	    	cal.setTime(date);
 	    	Calendar now = Calendar.getInstance();
 
+	    	int dayOfTweet = cal.get(Calendar.DAY_OF_YEAR);
 	    	int hourOfTweet = cal.get(Calendar.HOUR_OF_DAY);
-	    	int currentHour = now.get(Calendar.HOUR_OF_DAY); 
-	    	int hour = currentHour - hourOfTweet;
-	    	
 	    	int minOfTweet = cal.get(Calendar.MINUTE);
-    		int currentMin = now.get(Calendar.MINUTE);
+	    	
+	    	int currentDay = now.get(Calendar.DAY_OF_YEAR);
+	    	int currentHour = now.get(Calendar.HOUR_OF_DAY); 
+	    	int currentMin = now.get(Calendar.MINUTE);
+
+	    	int day = Math.abs(currentDay - dayOfTweet);
+	    	int hour = currentHour - hourOfTweet;
     		int min = Math.abs(currentMin - minOfTweet);
     		
-    		if (hour != 0) {
-    			if (hour == 1)
-	    			return "1 hour ago";
-	    		else {
-	    			if (hour < 0)
-	    				hour = currentHour + 24 - hourOfTweet;
-	    			return hour + " hours ago";
-	    		}
+    		if (day > 1) {
+    			return "on " + date;
     		} else {
-    			switch (min) {
-	    			case 0: return "few seconds ago";
-	    			case 1: return "1 minute ago";
-	    			default: return min + " minutes ago";
-				}
-	    	}
+	    		if (hour != 0) {
+	    			if (hour == 1)
+		    			return "1 hour ago";
+		    		else {
+		    			if (hour < 0)
+		    				hour = currentHour + 24 - hourOfTweet;
+		    			return hour + " hours ago";
+		    		}
+	    		} else {
+	    			switch (min) {
+		    			case 0: return "few seconds ago";
+		    			case 1: return "1 minute ago";
+		    			default: return min + " minutes ago";
+					}
+		    	}
+    		}
     	} catch (Exception e) {
     		e.printStackTrace();
     		return null;

@@ -25,7 +25,8 @@ public class ProfileActivity extends FragmentActivity {
 		ActionBar bar = getActionBar();
 		bar.setTitle("Profile");
 		bar.setDisplayHomeAsUpEnabled(true);
-		loadInfo();
+		User u = (User) getIntent().getSerializableExtra("user");
+		loadInfo(u);
 	}
 
 	@Override
@@ -35,13 +36,17 @@ public class ProfileActivity extends FragmentActivity {
 		return true;
 	}
 	
-	public void loadInfo() {
-		MyTwitterApp.getRestClient().getUser(new JsonHttpResponseHandler() {
-			public void onSuccess(JSONObject object) {
-				User user = User.fromJson(object);
-				loadHeader(user);
-			}
-		});
+	public void loadInfo(User u) {
+		if (u == null) {
+			MyTwitterApp.getRestClient().getUser(new JsonHttpResponseHandler() {
+				public void onSuccess(JSONObject object) {
+					User user = User.fromJson(object);
+					loadHeader(user);
+				}
+			});
+		} else {
+			loadHeader(u);
+		}
 	}
 	
 	public void loadHeader(User u) {

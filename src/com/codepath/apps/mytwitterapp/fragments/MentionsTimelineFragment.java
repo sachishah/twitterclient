@@ -3,8 +3,10 @@ package com.codepath.apps.mytwitterapp.fragments;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.codepath.apps.mytwitterapp.MyTwitterApp;
 import com.codepath.apps.mytwitterapp.models.Tweet;
@@ -31,6 +33,11 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 				tweets.addAll(Tweet.fromJson(jsonTweets));
 				getAdapter().addAll(tweets);
 				maxId = tweets.get(tweets.size() - 1).getId() + 1;
+			}
+			
+			@Override
+			public void onFailure(Throwable e, JSONObject obj) {
+				Toast.makeText(getActivity(), obj.toString(), Toast.LENGTH_SHORT).show();
 			}
 		}, maxId);
 	}

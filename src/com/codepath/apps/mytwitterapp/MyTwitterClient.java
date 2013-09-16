@@ -48,7 +48,7 @@ public class MyTwitterClient extends OAuthBaseClient {
     }
     
     public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId) {
-    	String url = getApiUrl("/statuses/user_timelines.json");
+    	String url = "/statuses/user_timeline.json";
     	getRequest(handler, url, maxId);
     }
 
@@ -62,6 +62,7 @@ public class MyTwitterClient extends OAuthBaseClient {
     private void getRequest(AsyncHttpResponseHandler handler, String url, long maxId) {
     	String apiUrl = getApiUrl(url);
     	RequestParams params = new RequestParams();
+    	params.put("count", "25");
     	if (maxId > 0)
     		params.put("max_id", Long.toString(maxId));
     	client.get(apiUrl, params, handler);

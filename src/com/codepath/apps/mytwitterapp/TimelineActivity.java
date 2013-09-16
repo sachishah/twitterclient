@@ -88,7 +88,6 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 		FragmentManager manager = getSupportFragmentManager();
 		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction(); 
 		if (tab.getTag() == "HomeTimelineFragment") {
-			ActionBar bar = getActionBar();
 			fts.replace(R.id.frame_container, new HomeTimelineFragment());
 		} else {
 			fts.replace(R.id.frame_container, new MentionsTimelineFragment());

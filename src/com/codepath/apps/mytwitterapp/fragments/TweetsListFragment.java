@@ -1,6 +1,5 @@
 package com.codepath.apps.mytwitterapp.fragments;
 
-
 import java.util.ArrayList;
 
 import android.os.Bundle;
