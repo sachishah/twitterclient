@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.json.JSONObject;
 
+@SuppressWarnings("serial")
 public class User extends BaseModel implements Serializable {
     public String getName() {
         return getString("name");
@@ -15,6 +16,10 @@ public class User extends BaseModel implements Serializable {
 
     public String getScreenName() {
         return getString("screen_name");
+    }
+    
+    public String getTagline() {
+    	return getString("description");
     }
 
     public String getProfileImageUrl() {

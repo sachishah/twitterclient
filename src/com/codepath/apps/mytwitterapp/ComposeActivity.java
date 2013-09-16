@@ -85,7 +85,7 @@ public class ComposeActivity extends Activity {
 	    		Tweet tweet = Tweet.fromJson(object);
 	    		Intent i = new Intent(getBaseContext(), TimelineActivity.class);
 	    		i.putExtra("tweet", tweet);
-				startActivity(i);
+	    		setResult(RESULT_OK, i);
 				finish();
 	    	}
 		}, tweet);

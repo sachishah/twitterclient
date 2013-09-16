@@ -1,67 +1,49 @@
 package com.codepath.apps.mytwitterapp;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
-import com.codepath.apps.mytwitterapp.models.Tweet;
+import com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment;
+import com.codepath.apps.mytwitterapp.fragments.MentionsTimelineFragment;
 import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class TimelineActivity extends Activity {
-	
-	private static long maxId = 0;
-	private static ArrayList<Tweet> tweets = new ArrayList<Tweet>();
-	private ListView lvTweets;
+public class TimelineActivity extends FragmentActivity implements TabListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		lvTweets = (ListView) findViewById(R.id.lvTweets);
+		setupNavigationTabs();
 		setActionBar();
-		getTweets();
 	}
+	
+	public void setupNavigationTabs() {
+		ActionBar bar = getActionBar();
+		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		bar.setDisplayShowTitleEnabled(true);
 
-	public void getTweets() {
-		MyTwitterApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONArray jsonTweets) {
-				int index = 1;
-				if (maxId == 0) {
-					lvTweets.addFooterView(getButton());
-					index--;
-				}
-				
-				ArrayList<Tweet> newTweets = Tweet.fromJson(jsonTweets);
+		Tab home = bar.newTab().setText("Home")
+				.setTag("HomeTimelineFragment").setIcon(R.drawable.ic_home)
+				.setTabListener(this);
+		bar.addTab(home);
 
-				Tweet tweet = (Tweet) getIntent().getSerializableExtra("tweet");
-				if (tweet != null)
-					tweets.add(tweet);
-
-				while (index < newTweets.size()) {
-					tweets.add(newTweets.get(index));
-					index++;
-				}
-				
-				int currentPosition = lvTweets.getFirstVisiblePosition();
-				lvTweets.setAdapter(new TweetsAdapter(getBaseContext(), tweets));
-				lvTweets.setSelectionFromTop(currentPosition + 1, 0);
-				maxId = tweets.get(tweets.size() - 1).getId();
-			}
-		}, maxId);
+		Tab mentions = bar.newTab().setText("Mentions")
+				.setTag("MentionsTimelineFragment").setIcon(R.drawable.ic_at)
+				.setTabListener(this);
+		bar.addTab(mentions);
+		bar.selectTab(home);
 	}
 
 	@Override
@@ -69,21 +51,6 @@ public class TimelineActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.timeline, menu);
 		return true;
-	}
-
-	@SuppressLint("InlinedApi")
-	private Button getButton() {
-		Button btnMore = new Button(this, null, android.R.attr.buttonStyleSmall);
-		btnMore.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
-		btnMore.setText("Load More Tweets");
-		btnMore.setTextColor(getResources().getColor(android.R.color.white));
-		btnMore.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View arg0) {
-		        getTweets();
-		    }
-		});
-		return btnMore;
 	}
 
 	private void setActionBar() {
@@ -97,15 +64,40 @@ public class TimelineActivity extends Activity {
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_compose:
-				Intent intent = new Intent(this, ComposeActivity.class);
-				startActivity(intent);
+				startActivity(new Intent(this, ComposeActivity.class));
+				return true;
+			case R.id.action_profile:
+				startActivity(new Intent(this, ProfileActivity.class));
 				return true;
 		}
 	    return false;
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		FragmentManager manager = getSupportFragmentManager();
+		android.support.v4.app.FragmentTransaction fts = manager.beginTransaction(); 
+		if (tab.getTag() == "HomeTimelineFragment") {
+			ActionBar bar = getActionBar();
+			fts.replace(R.id.frame_container, new HomeTimelineFragment());
+		} else {
+			fts.replace(R.id.frame_container, new MentionsTimelineFragment());
+		}
+		fts.commit();
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
 	}
 }

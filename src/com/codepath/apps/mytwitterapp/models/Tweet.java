@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@SuppressWarnings("serial")
 public class Tweet extends BaseModel implements Serializable{
     private User user;
 

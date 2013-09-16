@@ -12,5 +12,8 @@
     <string name="cancel">Cancel</string>
     <string name="tweet">Tweet</string>
     <string name="compose_tweet">Tweet.. (140 chars)</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="compose">Compose</string>
+    <string name="profile">Profile</string>
 
 </resources>
