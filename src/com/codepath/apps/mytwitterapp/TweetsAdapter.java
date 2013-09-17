@@ -33,6 +33,7 @@ public class TweetsAdapter extends ArrayAdapter<Tweet>{
 		
 		ImageView imageView = (ImageView) view.findViewById(R.id.ivProfile);
 		ImageLoader.getInstance().displayImage(user.getProfileImageUrl(), imageView);
+		imageView.setTag(user);
 		
 		TextView nameView = (TextView) view.findViewById(R.id.tvName);
 		String screenName = "<font color='#33b5e5'> @" + user.getScreenName() + "</small></font>";

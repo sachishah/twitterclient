@@ -14,7 +14,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MentionsTimelineFragment extends TweetsListFragment {
 	
-	private static long maxId = 0;
+	private long maxId = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 	public void getTweets() {
 		MyTwitterApp.getRestClient().getMentionsTimeline(new JsonHttpResponseHandler() {
 			@Override
-			public void onSuccess(JSONArray jsonTweets) {				
+			public void onSuccess(JSONArray jsonTweets) {
 				ArrayList<Tweet> tweets = new ArrayList<Tweet>();
 				Tweet tweet = (Tweet) getActivity().getIntent().getSerializableExtra("tweet");
 				if (tweet != null)

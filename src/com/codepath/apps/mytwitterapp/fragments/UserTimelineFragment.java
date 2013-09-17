@@ -10,16 +10,17 @@ import android.widget.Toast;
 
 import com.codepath.apps.mytwitterapp.MyTwitterApp;
 import com.codepath.apps.mytwitterapp.models.Tweet;
+import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class UserTimelineFragment extends TweetsListFragment {
 	
-	private static long maxId = 0;
+	private long maxId = 0;
+	private User user;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getTweets();
 	}
 	
 	public void getTweets() {
@@ -27,6 +28,9 @@ public class UserTimelineFragment extends TweetsListFragment {
 			@Override
 			public void onSuccess(JSONArray jsonTweets) {				
 				ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+				Tweet tweet = (Tweet) getActivity().getIntent().getSerializableExtra("tweet");
+				if (tweet != null)
+					tweets.add(tweet);
 				tweets.addAll(Tweet.fromJson(jsonTweets));
 				getAdapter().addAll(tweets);
 				maxId = tweets.get(tweets.size() - 1).getId() + 1;
@@ -36,11 +40,20 @@ public class UserTimelineFragment extends TweetsListFragment {
 			public void onFailure(Throwable e, JSONObject obj) {
 				Toast.makeText(getActivity(), obj.toString(), Toast.LENGTH_SHORT).show();
 			}
-		}, maxId);
+		}, maxId, user);
 	}
 	
 	@Override
 	public void loadMoreTweets() {
+		getTweets();
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 		getTweets();
 	}
 }

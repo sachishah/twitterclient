@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.codepath.apps.mytwitterapp.fragments.HomeTimelineFragment;
 import com.codepath.apps.mytwitterapp.fragments.MentionsTimelineFragment;
@@ -72,7 +73,9 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 				startActivity(new Intent(this, ComposeActivity.class));
 				return true;
 			case R.id.action_profile:
-				startActivity(new Intent(this, ProfileActivity.class));
+				Intent i = new Intent(this, ProfileActivity.class);
+				i.putExtra("user", "");
+				startActivity(i);
 				return true;
 		}
 	    return false;
@@ -98,5 +101,12 @@ public class TimelineActivity extends FragmentActivity implements TabListener {
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		
+	}
+	
+	public void onProfileClick(View v) {
+		Intent i = new Intent(this, ProfileActivity.class);
+		User u = (User) v.getTag();
+		i.putExtra("user", u.getJSONString());
+		startActivity(i);
 	}
 }

@@ -1,9 +1,9 @@
 package com.codepath.apps.mytwitterapp;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.mytwitterapp.fragments.UserTimelineFragment;
 import com.codepath.apps.mytwitterapp.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,8 +26,23 @@ public class ProfileActivity extends FragmentActivity {
 		ActionBar bar = getActionBar();
 		bar.setTitle("Profile");
 		bar.setDisplayHomeAsUpEnabled(true);
-		User u = (User) getIntent().getSerializableExtra("user");
-		loadInfo(u);
+		String userJsonString = getIntent().getStringExtra("user");
+
+		JSONObject jsonObject;
+		User user = null;
+		if (userJsonString != "") {
+			try {
+				jsonObject = new JSONObject(userJsonString);
+				user = User.fromJson(jsonObject);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+
+		loadInfo(user);
+		UserTimelineFragment fragment = (UserTimelineFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.fragmentUserTimeline);
+		fragment.setUser(user);
 	}
 
 	@Override
@@ -50,6 +66,7 @@ public class ProfileActivity extends FragmentActivity {
 	}
 	
 	public void loadHeader(User u) {
+		
 		TextView tvName = (TextView) findViewById(R.id.tvName);
 		TextView tvTagline = (TextView) findViewById(R.id.tvTagline);
 		TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
@@ -66,8 +83,8 @@ public class ProfileActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    if (item.getItemId() == android.R.id.home) {
-	    	startActivity(new Intent(this, TimelineActivity.class));
-			return true;
+	    	finish();
+	    	return true;
 	    }
 	    return false;
 	}

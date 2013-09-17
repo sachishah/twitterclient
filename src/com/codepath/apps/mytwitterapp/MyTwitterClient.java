@@ -5,6 +5,7 @@ import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
 
+import com.codepath.apps.mytwitterapp.models.User;
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -34,12 +35,20 @@ public class MyTwitterClient extends OAuthBaseClient {
  
     public void getHomeTimeline(AsyncHttpResponseHandler handler, long maxId) {
     	String url = "/statuses/home_timeline.json";
-    	getRequest(handler, url, maxId);
+    	RequestParams params = new RequestParams();
+    	params.put("count", "25");
+    	if (maxId > 0)
+    		params.put("max_id", Long.toString(maxId));
+    	getRequest(handler, url, params);
     }
     
     public void getMentionsTimeline(AsyncHttpResponseHandler handler, long maxId) {
     	String url = "/statuses/mentions_timeline.json";
-    	getRequest(handler, url, maxId);
+    	RequestParams params = new RequestParams();
+    	params.put("count", "25");
+    	if (maxId > 0)
+    		params.put("max_id", Long.toString(maxId));
+    	getRequest(handler, url, params);
     }
     
     public void getUser(AsyncHttpResponseHandler handler) {
@@ -47,9 +56,15 @@ public class MyTwitterClient extends OAuthBaseClient {
     	client.get(apiUrl, null, handler);
     }
     
-    public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId) {
+    public void getUserTimeline(AsyncHttpResponseHandler handler, long maxId, User user) {
     	String url = "/statuses/user_timeline.json";
-    	getRequest(handler, url, maxId);
+    	RequestParams params = new RequestParams();
+    	params.put("count", "25");
+    	if (maxId > 0)
+    		params.put("max_id", Long.toString(maxId));
+    	if (user != null)
+    		params.put("user_id", Long.toString(user.getId()));
+    	getRequest(handler, url, params);
     }
 
     public void postStatusesUpdate(AsyncHttpResponseHandler handler, String tweet) {
@@ -59,12 +74,8 @@ public class MyTwitterClient extends OAuthBaseClient {
     	client.post(apiUrl, params, handler);
     }
     
-    private void getRequest(AsyncHttpResponseHandler handler, String url, long maxId) {
+    private void getRequest(AsyncHttpResponseHandler handler, String url, RequestParams params) {
     	String apiUrl = getApiUrl(url);
-    	RequestParams params = new RequestParams();
-    	params.put("count", "25");
-    	if (maxId > 0)
-    		params.put("max_id", Long.toString(maxId));
     	client.get(apiUrl, params, handler);
     }
 }

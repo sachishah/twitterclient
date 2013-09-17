@@ -14,7 +14,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class HomeTimelineFragment extends TweetsListFragment {
 	
-	private static long maxId = 0;
+	private long maxId = 0;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class HomeTimelineFragment extends TweetsListFragment {
 					tweets.add(tweet);
 				tweets.addAll(Tweet.fromJson(jsonTweets));
 				getAdapter().addAll(tweets);
-				maxId = tweets.get(tweets.size() - 1).getId();
+				maxId = tweets.get(tweets.size() - 1).getId() - 1;
 			}
 			
 			@Override
